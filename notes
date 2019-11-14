@@ -1,0 +1,28 @@
+Use for all reno, option only for specifying value
+
+tcp_parse_options():
+	read in options from header
+
+tcp_recv_state_process():
+	call parse_options()
+
+tcp_reno_ssthresh
+
+===========================================
+
+change tcp_reno_ssthresh to use our new equation with constant value
+
+add field to tcp_sock for ssthresh_scaling_factor
+
+create new function tcp_reno_ssthresh_with_scaling_factor that uses our
+	equation with the new ssthresh_scaling_factor variable
+
+in parse_options, if option is present
+	- set ssthresh_scaling_factor
+	- change tcp_congestion_ops function pointer to point to this new funciton
+
+make sure parse_options is called on syn and synack
+add option to header (find where header is made)
+	-- tcp_options_write
+
+
