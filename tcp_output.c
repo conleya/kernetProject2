@@ -690,6 +690,9 @@ static unsigned int tcp_synack_options(const struct sock *sk,
 	/* We always send an MSS option. */
 	opts->mss = mss;
 	remaining -= TCPOLEN_MSS_ALIGNED;
+	
+	//our custom opsize
+	remaining -= 4;
 
 	if (likely(ireq->wscale_ok)) {
 		opts->ws = ireq->rcv_wscale;
