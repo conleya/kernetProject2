@@ -691,6 +691,9 @@ static unsigned int tcp_synack_options(const struct sock *sk,
 	opts->mss = mss;
 	remaining -= TCPOLEN_MSS_ALIGNED;
 
+	//our custom opsize
+	reaining -= 4;
+
 	if (likely(ireq->wscale_ok)) {
 		opts->ws = ireq->rcv_wscale;
 		opts->options |= OPTION_WSCALE;

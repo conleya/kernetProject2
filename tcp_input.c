@@ -5800,7 +5800,10 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
 	tcp_parse_options(sock_net(sk), skb, &tp->rx_opt, 0, &foc);
 	if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr)
 		tp->rx_opt.rcv_tsecr -= tp->tsoffset;
-	sk->tcp_ssthresh_scale = tp->rx_opt.tcp_ssthresh_scale;
+
+	if(tp->rx_opt.tcp_ssthresh_scale)
+	  sk->tcp_ssthresh_scale = tp->rx_opt.tcp_ssthresh_scale;
+		
 	if (th->ack) {
 		/* rfc793:
 		 * "If the state is SYN-SENT then
