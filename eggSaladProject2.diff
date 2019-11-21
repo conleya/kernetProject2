@@ -1,0 +1,186 @@
+diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-tables.c linux-4.19.68-original/include/linux/tcp.h linux-4.19.68-dev/include/linux/tcp.h
+*** linux-4.19.68-original/include/linux/tcp.h	2019-08-25 04:48:06.000000000 -0400
+--- linux-4.19.68-dev/include/linux/tcp.h	2019-11-18 16:54:35.318275739 -0500
+***************
+*** 104,109 ****
+--- 104,110 ----
+  	u8	num_sacks;	/* Number of SACK blocks		*/
+  	u16	user_mss;	/* mss requested by user in ioctl	*/
+  	u16	mss_clamp;	/* Maximal mss, negotiated at connection setup */
++ 	u16 tcp_ssthresh_scale;
+  };
+  
+  static inline void tcp_clear_options(struct tcp_options_received *rx_opt)
+diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-tables.c linux-4.19.68-original/include/net/sock.h linux-4.19.68-dev/include/net/sock.h
+*** linux-4.19.68-original/include/net/sock.h	2019-08-25 04:48:06.000000000 -0400
+--- linux-4.19.68-dev/include/net/sock.h	2019-11-18 17:45:19.962519508 -0500
+***************
+*** 509,514 ****
+--- 509,515 ----
+  	void                    (*sk_destruct)(struct sock *sk);
+  	struct sock_reuseport __rcu	*sk_reuseport_cb;
+  	struct rcu_head		sk_rcu;
++ 	u16 tcp_ssthresh_scale;
+  };
+  
+  enum sk_pacing {
+diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-tables.c linux-4.19.68-original/Makefile linux-4.19.68-dev/Makefile
+*** linux-4.19.68-original/Makefile	2019-08-25 04:48:06.000000000 -0400
+--- linux-4.19.68-dev/Makefile	2019-11-16 19:26:57.709199707 -0500
+***************
+*** 2,8 ****
+  VERSION = 4
+  PATCHLEVEL = 19
+  SUBLEVEL = 68
+! EXTRAVERSION =
+  NAME = "People's Front"
+  
+  # *DOCUMENTATION*
+--- 2,8 ----
+  VERSION = 4
+  PATCHLEVEL = 19
+  SUBLEVEL = 68
+! EXTRAVERSION =EggSaladProject2
+  NAME = "People's Front"
+  
+  # *DOCUMENTATION*
+diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-tables.c linux-4.19.68-original/net/ipv4/tcp_cong.c linux-4.19.68-dev/net/ipv4/tcp_cong.c
+*** linux-4.19.68-original/net/ipv4/tcp_cong.c	2019-08-25 04:48:06.000000000 -0400
+--- linux-4.19.68-dev/net/ipv4/tcp_cong.c	2019-11-20 21:11:44.186485737 -0500
+***************
+*** 452,459 ****
+  u32 tcp_reno_ssthresh(struct sock *sk)
+  {
+  	const struct tcp_sock *tp = tcp_sk(sk);
+! 
+! 	return max(tp->snd_cwnd >> 1U, 2U);
+  }
+  EXPORT_SYMBOL_GPL(tcp_reno_ssthresh);
+  
+--- 452,468 ----
+  u32 tcp_reno_ssthresh(struct sock *sk)
+  {
+  	const struct tcp_sock *tp = tcp_sk(sk);
+! 	const struct inet_sock *inet = inet_sk(sk);
+! 	u16 x = 10;
+! 	x = x * tp->snd_cwnd;
+! 	if(sk->tcp_ssthresh_scale)
+! 	  x = x / sk->tcp_ssthresh_scale;
+! 	else
+!     x = x / 20;
+! 	printk(KERN_INFO "KERNET ssthresh_scale: %d", sk->tcp_ssthresh_scale);
+!   printk(KERN_INFO "KERNET cwnd: %d", tp->snd_cwnd);
+! 	printk(KERN_INFO "KERNET src: %d dest: %d old: %d new: %d", inet->inet_dport, inet->inet_sport, tp->snd_ssthresh, x);
+! 	return x;
+  }
+  EXPORT_SYMBOL_GPL(tcp_reno_ssthresh);
+  
+diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-tables.c linux-4.19.68-original/net/ipv4/tcp_input.c linux-4.19.68-dev/net/ipv4/tcp_input.c
+*** linux-4.19.68-original/net/ipv4/tcp_input.c	2019-08-25 04:48:06.000000000 -0400
+--- linux-4.19.68-dev/net/ipv4/tcp_input.c	2019-11-20 21:00:07.818755021 -0500
+***************
+*** 3798,3803 ****
+--- 3798,3804 ----
+  		       struct tcp_fastopen_cookie *foc)
+  {
+  	const unsigned char *ptr;
++ 	u16 ssthresh_scale;
+  	const struct tcphdr *th = tcp_hdr(skb);
+  	int length = (th->doff * 4) - sizeof(struct tcphdr);
+  
+***************
+*** 3900,3905 ****
+--- 3901,3910 ----
+  							  opsize);
+  				break;
+  
++ 			case 253:
++ 				ssthresh_scale = get_unaligned_be16(ptr);
++ 				opt_rx->tcp_ssthresh_scale = ssthresh_scale;
++ 				break;
+  			}
+  			ptr += opsize-2;
+  			length -= opsize;
+***************
+*** 5791,5796 ****
+--- 5796,5804 ----
+  	if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr)
+  		tp->rx_opt.rcv_tsecr -= tp->tsoffset;
+  
++ 	if(tp->rx_opt.tcp_ssthresh_scale)
++ 		sk->tcp_ssthresh_scale = tp->rx_opt.tcp_ssthresh_scale;
++ 
+  	if (th->ack) {
+  		/* rfc793:
+  		 * "If the state is SYN-SENT then
+***************
+*** 6461,6466 ****
+--- 6469,6477 ----
+  	tcp_parse_options(sock_net(sk), skb, &tmp_opt, 0,
+  			  want_cookie ? NULL : &foc);
+  
++ 	if(tmp_opt.tcp_ssthresh_scale)
++ 		sk->tcp_ssthresh_scale = tmp_opt.tcp_ssthresh_scale;
++ 
+  	if (want_cookie && !tmp_opt.saw_tstamp)
+  		tcp_clear_options(&tmp_opt);
+  
+diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-tables.c linux-4.19.68-original/net/ipv4/tcp_output.c linux-4.19.68-dev/net/ipv4/tcp_output.c
+*** linux-4.19.68-original/net/ipv4/tcp_output.c	2019-08-25 04:48:06.000000000 -0400
+--- linux-4.19.68-dev/net/ipv4/tcp_output.c	2019-11-20 22:30:51.815211800 -0500
+***************
+*** 440,445 ****
+--- 440,446 ----
+  	__u8 *hash_location;	/* temporary pointer, overloaded */
+  	__u32 tsval, tsecr;	/* need to include OPTION_TS */
+  	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
++ 	u16 tcp_ssthresh_scale; /* our tcp option */
+  };
+  
+  /* Write previously computed TCP options to the packet.
+***************
+*** 548,557 ****
+--- 549,565 ----
+  		}
+  		ptr += (len + 3) >> 2;
+  	}
++ 	if(opts->tcp_ssthresh_scale){
++ 		*ptr++ = htonl((253 << 24) |
++                    (4 << 16) |
++                    (opts->tcp_ssthresh_scale));
++ 	}
+  
+  	smc_options_write(ptr, &options);
+  }
+  
++ #define SSTHRESH_SCALE_VAL 70
++ 
+  static void smc_set_option(const struct tcp_sock *tp,
+  			   struct tcp_out_options *opts,
+  			   unsigned int *remaining)
+***************
+*** 619,624 ****
+--- 627,636 ----
+  	opts->mss = tcp_advertise_mss(sk);
+  	remaining -= TCPOLEN_MSS_ALIGNED;
+  
++ 	//our custom opsize
++ 	opts->tcp_ssthresh_scale = SSTHRESH_SCALE_VAL;
++ 	remaining -= 4;
++ 
+  	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !*md5)) {
+  		opts->options |= OPTION_TS;
+  		opts->tsval = tcp_skb_timestamp(skb) + tp->tsoffset;
+***************
+*** 685,690 ****
+--- 697,706 ----
+  	opts->mss = mss;
+  	remaining -= TCPOLEN_MSS_ALIGNED;
+  
++ 	//our custom opsize
++ 	opts->tcp_ssthresh_scale = SSTHRESH_SCALE_VAL;
++ 	remaining -= 4;
++ 
+  	if (likely(ireq->wscale_ok)) {
+  		opts->ws = ireq->rcv_wscale;
+  		opts->options |= OPTION_WSCALE;
