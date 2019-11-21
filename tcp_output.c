@@ -440,6 +440,7 @@ struct tcp_out_options {
 	__u8 *hash_location;	/* temporary pointer, overloaded */
 	__u32 tsval, tsecr;	/* need to include OPTION_TS */
 	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
+	u16 tcp_ssthresh_scale; /* our tcp option */
 };
 
 /* Write previously computed TCP options to the packet.
@@ -548,15 +549,16 @@ static void tcp_options_write(__be32 *ptr, struct tcp_sock *tp,
 		}
 		ptr += (len + 3) >> 2;
 	}
-#define SSTHRESH_SCALE_VAL 30
-	if(1){
+	if(opts->tcp_ssthresh_scale){
 		*ptr++ = htonl((253 << 24) |
-									 (4 << 16) |
-								   (SSTHRESH_SCALE_VAL));
+                   (4 << 16) |
+                   (opts->tcp_ssthresh_scale));
 	}
 
 	smc_options_write(ptr, &options);
 }
+
+#define SSTHRESH_SCALE_VAL 30
 
 static void smc_set_option(const struct tcp_sock *tp,
 			   struct tcp_out_options *opts,
@@ -625,6 +627,10 @@ static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
 	opts->mss = tcp_advertise_mss(sk);
 	remaining -= TCPOLEN_MSS_ALIGNED;
 
+	//our custom opsize
+	opts->tcp_ssthresh_scale = SSTHRESH_SCALE_VAL;
+	remaining -= 4;
+
 	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !*md5)) {
 		opts->options |= OPTION_TS;
 		opts->tsval = tcp_skb_timestamp(skb) + tp->tsoffset;
@@ -690,8 +696,9 @@ static unsigned int tcp_synack_options(const struct sock *sk,
 	/* We always send an MSS option. */
 	opts->mss = mss;
 	remaining -= TCPOLEN_MSS_ALIGNED;
-	
+
 	//our custom opsize
+	opts->tcp_ssthresh_scale = SSTHRESH_SCALE_VAL;
 	remaining -= 4;
 
 	if (likely(ireq->wscale_ok)) {

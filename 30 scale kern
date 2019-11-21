@@ -1,0 +1,71 @@
+10% threshold
+Nov 20 22:07:49 egg-VirtualBox kernel: [  896.782258] KERNET ssthresh_scale: 0
+Nov 20 22:07:49 egg-VirtualBox kernel: [  896.782260] KERNET cwnd: 10
+Nov 20 22:07:51 egg-VirtualBox kernel: [  896.782261] KERNET src: 36895 dest: 40170 old: 2147483647 new: 5
+Nov 20 22:07:51 egg-VirtualBox kernel: [  899.533964] KERNET ssthresh_scale: 30
+Nov 20 22:07:51 egg-VirtualBox kernel: [  899.533965] KERNET cwnd: 10
+Nov 20 22:07:52 egg-VirtualBox kernel: [  899.533966] KERNET src: 36895 dest: 41194 old: 5 new: 3
+Nov 20 22:07:52 egg-VirtualBox kernel: [  900.074205] KERNET ssthresh_scale: 30
+Nov 20 22:07:52 egg-VirtualBox kernel: [  900.074206] KERNET cwnd: 10
+Nov 20 22:07:54 egg-VirtualBox kernel: [  900.074206] KERNET src: 36895 dest: 41706 old: 5 new: 3
+Nov 20 22:07:54 egg-VirtualBox kernel: [  902.242517] KERNET ssthresh_scale: 0
+Nov 20 22:07:54 egg-VirtualBox kernel: [  902.242553] KERNET cwnd: 10
+Nov 20 22:07:56 egg-VirtualBox kernel: [  902.242571] KERNET src: 36895 dest: 42730 old: 2147483647 new: 5
+Nov 20 22:07:56 egg-VirtualBox kernel: [  904.319531] KERNET ssthresh_scale: 0
+Nov 20 22:07:56 egg-VirtualBox kernel: [  904.319544] KERNET cwnd: 10
+Nov 20 22:07:57 egg-VirtualBox kernel: [  904.319549] KERNET src: 36895 dest: 43754 old: 2147483647 new: 5
+Nov 20 22:07:57 egg-VirtualBox kernel: [  905.566035] KERNET ssthresh_scale: 0
+Nov 20 22:07:57 egg-VirtualBox kernel: [  905.566085] KERNET cwnd: 10
+Nov 20 22:10:18 egg-VirtualBox kernel: [  905.566101] KERNET src: 36895 dest: 44266 old: 2147483647 new: 5
+
+50% threshold
+Nov 20 22:10:18 egg-VirtualBox kernel: [ 1046.366841] KERNET ssthresh_scale: 0
+Nov 20 22:10:18 egg-VirtualBox kernel: [ 1046.366885] KERNET cwnd: 10
+Nov 20 22:10:21 egg-VirtualBox kernel: [ 1046.366898] KERNET src: 36895 dest: 46314 old: 2147483647 new: 5
+Nov 20 22:10:21 egg-VirtualBox kernel: [ 1049.408175] KERNET ssthresh_scale: 0
+Nov 20 22:10:21 egg-VirtualBox kernel: [ 1049.408194] KERNET cwnd: 10
+Nov 20 22:10:27 egg-VirtualBox kernel: [ 1049.408200] KERNET src: 36895 dest: 46826 old: 2147483647 new: 5
+Nov 20 22:10:27 egg-VirtualBox kernel: [ 1054.942933] KERNET ssthresh_scale: 30
+Nov 20 22:10:27 egg-VirtualBox kernel: [ 1054.942968] KERNET cwnd: 10
+Nov 20 22:10:30 egg-VirtualBox kernel: [ 1054.942979] KERNET src: 36895 dest: 46826 old: 5 new: 3
+Nov 20 22:10:30 egg-VirtualBox kernel: [ 1058.366902] KERNET ssthresh_scale: 30
+Nov 20 22:10:30 egg-VirtualBox kernel: [ 1058.366922] KERNET cwnd: 10
+Nov 20 22:10:43 egg-VirtualBox kernel: [ 1058.366926] KERNET src: 47338 dest: 36895 old: 5 new: 3
+Nov 20 22:10:43 egg-VirtualBox kernel: [ 1071.679023] KERNET ssthresh_scale: 0
+Nov 20 22:10:43 egg-VirtualBox kernel: [ 1071.679039] KERNET cwnd: 10
+Nov 20 22:11:19 egg-VirtualBox kernel: [ 1071.679045] KERNET src: 36895 dest: 47850 old: 2147483647 new: 5
+Nov 20 22:11:19 egg-VirtualBox kernel: [ 1107.006503] KERNET ssthresh_scale: 30
+Nov 20 22:11:19 egg-VirtualBox kernel: [ 1107.006522] KERNET cwnd: 1
+Nov 20 22:11:19 egg-VirtualBox kernel: [ 1107.006528] KERNET src: 36895 dest: 47850 old: 5 new: 0
+Nov 20 22:11:19 egg-VirtualBox kernel: [ 1107.414122] KERNET ssthresh_scale: 30
+Nov 20 22:11:19 egg-VirtualBox kernel: [ 1107.414142] KERNET cwnd: 2
+Nov 20 22:11:20 egg-VirtualBox kernel: [ 1107.414146] KERNET src: 36895 dest: 47850 old: 0 new: 0
+Nov 20 22:11:20 egg-VirtualBox kernel: [ 1108.033674] KERNET ssthresh_scale: 0
+Nov 20 22:11:20 egg-VirtualBox kernel: [ 1108.033675] KERNET cwnd: 10
+Nov 20 22:11:24 egg-VirtualBox kernel: [ 1108.033676] KERNET src: 36895 dest: 48362 old: 2147483647 new: 5
+Nov 20 22:11:24 egg-VirtualBox kernel: [ 1112.382298] KERNET ssthresh_scale: 30
+Nov 20 22:11:24 egg-VirtualBox kernel: [ 1112.382331] KERNET cwnd: 10
+Nov 20 22:11:33 egg-VirtualBox kernel: [ 1112.382343] KERNET src: 48362 dest: 36895 old: 5 new: 3
+Nov 20 22:11:33 egg-VirtualBox kernel: [ 1120.989869] KERNET ssthresh_scale: 30
+Nov 20 22:11:33 egg-VirtualBox kernel: [ 1120.989885] KERNET cwnd: 10
+Nov 20 22:11:33 egg-VirtualBox kernel: [ 1120.989889] KERNET src: 36895 dest: 48362 old: 5 new: 3
+Nov 20 22:11:33 egg-VirtualBox kernel: [ 1121.599066] KERNET ssthresh_scale: 0
+Nov 20 22:11:33 egg-VirtualBox kernel: [ 1121.599093] KERNET cwnd: 10
+Nov 20 22:11:41 egg-VirtualBox kernel: [ 1121.599098] KERNET src: 36895 dest: 48874 old: 2147483647 new: 5
+Nov 20 22:11:41 egg-VirtualBox kernel: [ 1128.957622] KERNET ssthresh_scale: 0
+Nov 20 22:11:41 egg-VirtualBox kernel: [ 1128.957666] KERNET cwnd: 10
+Nov 20 22:12:13 egg-VirtualBox kernel: [ 1128.957678] KERNET src: 36895 dest: 49898 old: 2147483647 new: 5
+Nov 20 22:12:13 egg-VirtualBox kernel: [ 1161.565573] KERNET ssthresh_scale: 30
+Nov 20 22:12:13 egg-VirtualBox kernel: [ 1161.565575] KERNET ssthresh_scale: 30
+Nov 20 22:12:13 egg-VirtualBox kernel: [ 1161.565608] KERNET cwnd: 10
+Nov 20 22:12:13 egg-VirtualBox kernel: [ 1161.565630] KERNET src: 36895 dest: 50410 old: 7 new: 3
+Nov 20 22:12:13 egg-VirtualBox kernel: [ 1161.565645] KERNET cwnd: 1
+Nov 20 22:12:14 egg-VirtualBox kernel: [ 1161.565657] KERNET src: 49898 dest: 36895 old: 7 new: 0
+Nov 20 22:12:14 egg-VirtualBox kernel: [ 1161.981653] KERNET ssthresh_scale: 30
+Nov 20 22:12:14 egg-VirtualBox kernel: [ 1161.981682] KERNET cwnd: 2
+Nov 20 22:12:15 egg-VirtualBox kernel: [ 1161.981689] KERNET src: 36895 dest: 50410 old: 3 new: 0
+Nov 20 22:12:15 egg-VirtualBox kernel: [ 1163.645028] KERNET ssthresh_scale: 30
+Nov 20 22:12:15 egg-VirtualBox kernel: [ 1163.645077] KERNET cwnd: 10
+Nov 20 22:14:36 egg-VirtualBox kernel: [ 1163.645093] KERNET src: 50410 dest: 36895 old: 7 new: 3
+Nov 20 22:14:36 egg-VirtualBox kernel: [ 1303.868331] KERNET ssthresh_scale: 30
+Nov 20 22:14:36 egg-VirtualBox kernel: [ 1303.868332] KERNET cwnd: 2
