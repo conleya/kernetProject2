@@ -17,25 +17,23 @@
 
 
 
-#define PORT 5000
+#define PORT 5001
 #define NUM_CLIENTS 100
 #define NO_CLIENT -1
 #define TIMEOUT 2
 #define NUM_MESSAGES 10000
 #define BUF_SIZE 256
 #define BACKLOG 100
+#define MESSAGE "HELLO FROM SERVER"
 
 void* sendMessages(void* sockfd){
 	int fd = *((int*)sockfd);
 
-	char* buf = calloc(BUF_SIZE, sizeof(char));
+	char* buf = MESSAGE;
 
 	for(int n = 0; n < NUM_MESSAGES; n++){
 		write(fd, buf, strlen(buf) + 1);
-		memset(buf, 0, BUF_SIZE);
 	}
-
-	free(buf);
 
 	return NULL;
 }
@@ -169,6 +167,7 @@ int main(){
 	close(listenFd);
 
 	free(clients);
+	free(clientThreads);
 
 }
 

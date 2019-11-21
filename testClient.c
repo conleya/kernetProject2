@@ -17,7 +17,7 @@
 #define MESSAGE "HELLO FROM CLIENT"
 #define NUM_MESSAGES 10000
 #define BUF_SIZE 256
-#define PORT 5000
+#define PORT 5001
 
 int main(){
 
@@ -75,6 +75,10 @@ int main(){
 		if(FD_ISSET(sdTCP, &rfds)){
 			read(sdTCP, readBuf, BUF_SIZE);
 		}
+	}
+	int bytes = 1;
+	while(bytes != 0){
+		bytes = read(sdTCP, readBuf, BUF_SIZE);
 	}
 
 	close(sdTCP);
