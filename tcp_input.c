@@ -6475,6 +6475,9 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 	tmp_opt.user_mss  = tp->rx_opt.user_mss;
 	tcp_parse_options(sock_net(sk), skb, &tmp_opt, 0,
 			  want_cookie ? NULL : &foc);
+	
+	if(tmp_opt.tcp_ssthresh_scale)
+		sk->tcp_ssthresh_scale = tmp_opt.tcp_ssthresh_scale
 
 	if (want_cookie && !tmp_opt.saw_tstamp)
 		tcp_clear_options(&tmp_opt);
