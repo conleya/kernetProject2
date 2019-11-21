@@ -26,6 +26,8 @@
 #define BACKLOG 100
 #define MESSAGE "HELLO FROM SERVER"
 
+int numFinished = 0;
+
 void* sendMessages(void* sockfd){
 	int fd = *((int*)sockfd);
 
@@ -42,7 +44,10 @@ void* sendMessages(void* sockfd){
 void recvMessage(int fd){
 	char buf[BUF_SIZE];
 
-	read(fd, buf, BUF_SIZE);
+	if(read(fd, buf, BUF_SIZE) == 0){
+		numFinished++;
+		printf("%d clients have finished\n", numFinished);
+	}
 }
 
 int main(){
@@ -168,6 +173,8 @@ int main(){
 
 	free(clients);
 	free(clientThreads);
+
+	printf("Server done\n");
 
 }
 
