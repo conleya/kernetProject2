@@ -453,16 +453,14 @@ u32 tcp_reno_ssthresh(struct sock *sk)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 	const struct inet_sock *inet = inet_sk(sk);
-	u16 x = sk->tcp_ssthresh_scale;
-	printk(KERN_INFO "scale is %d", x);
-	x = x/10U;
-	printk(KERN_INFO "div 10 is %d", x);
-	if(x != 0)
-		x = 1U/x;
-	printk(KERN_INFO "1 over is %d", x);
+	u16 x = 10;
 	x = x * tp->snd_cwnd;
-	x = max(x, 2U);
+	if(sk->tcp_ssthresh_scale)
+	  x = x / sk->tcp_ssthresh_scale;
+	else
+    x = x / 20;
 	printk(KERN_INFO "KERNET ssthresh_scale: %d", sk->tcp_ssthresh_scale);
+  printk(KERN_INFO "KERNET cwnd: %d", tp->snd_cwnd);
 	printk(KERN_INFO "KERNET src: %d dest: %d old: %d new: %d", inet->inet_dport, inet->inet_sport, tp->snd_ssthresh, x);
 	return x;
 }

@@ -3804,8 +3804,6 @@ void tcp_parse_options(const struct net *net,
 
 	ptr = (const unsigned char *)(th + 1);
 	opt_rx->saw_tstamp = 0;
-	printk("setting.");
-	opt_rx->tcp_ssthresh_scale = 20;
 
 	while (length > 0) {
 		int opcode = *ptr++;
@@ -3905,11 +3903,8 @@ void tcp_parse_options(const struct net *net,
 
 			case 253:
 				ssthresh_scale = get_unaligned_be16(ptr);
-				printk("found opt: with %d", ssthresh_scale);
-				if(ssthresh_scale && ssthresh_scale > 0 && ssthresh_scale < 101){
-					opt_rx->tcp_ssthresh_scale = ssthresh_scale;
-				}
-
+				opt_rx->tcp_ssthresh_scale = ssthresh_scale;
+				break;
 			}
 			ptr += opsize-2;
 			length -= opsize;
@@ -5802,8 +5797,8 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
 		tp->rx_opt.rcv_tsecr -= tp->tsoffset;
 
 	if(tp->rx_opt.tcp_ssthresh_scale)
-	  sk->tcp_ssthresh_scale = tp->rx_opt.tcp_ssthresh_scale;
-		
+		sk->tcp_ssthresh_scale = tp->rx_opt.tcp_ssthresh_scale;
+
 	if (th->ack) {
 		/* rfc793:
 		 * "If the state is SYN-SENT then
@@ -6031,8 +6026,6 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
 	struct request_sock *req;
 	int queued = 0;
 	bool acceptable;
-
-
 
 	switch (sk->sk_state) {
 	case TCP_CLOSE:
@@ -6475,6 +6468,9 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 	tmp_opt.user_mss  = tp->rx_opt.user_mss;
 	tcp_parse_options(sock_net(sk), skb, &tmp_opt, 0,
 			  want_cookie ? NULL : &foc);
+
+	if(tmp_opt.tcp_ssthresh_scale)
+		sk->tcp_ssthresh_scale = tmp_opt.tcp_ssthresh_scale;
 
 	if (want_cookie && !tmp_opt.saw_tstamp)
 		tcp_clear_options(&tmp_opt);
