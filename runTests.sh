@@ -2,8 +2,8 @@
 
 ./serv.out &
 sleep .3
-for i in {0..1}
+for i in {0..99}
 do
-	./client.out
+	./client.out &
 	echo $i
 done
