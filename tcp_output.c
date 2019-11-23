@@ -558,8 +558,6 @@ static void tcp_options_write(__be32 *ptr, struct tcp_sock *tp,
 	smc_options_write(ptr, &options);
 }
 
-#define SSTHRESH_SCALE_VAL 30
-
 static void smc_set_option(const struct tcp_sock *tp,
 			   struct tcp_out_options *opts,
 			   unsigned int *remaining)
@@ -628,7 +626,7 @@ static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
 	remaining -= TCPOLEN_MSS_ALIGNED;
 
 	//our custom opsize
-	opts->tcp_ssthresh_scale = SSTHRESH_SCALE_VAL;
+	opts->tcp_ssthresh_scale = sock_net(sk)->ipv4.sysctl_tcp_ssthresh_scale;
 	remaining -= 4;
 
 	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !*md5)) {
@@ -698,7 +696,7 @@ static unsigned int tcp_synack_options(const struct sock *sk,
 	remaining -= TCPOLEN_MSS_ALIGNED;
 
 	//our custom opsize
-	opts->tcp_ssthresh_scale = SSTHRESH_SCALE_VAL;
+	opts->tcp_ssthresh_scale = sock_net(sk)->ipv4.sysctl_tcp_ssthresh_scale;
 	remaining -= 4;
 
 	if (likely(ireq->wscale_ok)) {
