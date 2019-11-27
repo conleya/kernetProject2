@@ -148,9 +148,9 @@ diff -rcNP -x 'signing_key.*' -x x509.genkey -x fixdep -x objtool -x inat-table.
 ! 	  x = x / sk->tcp_ssthresh_scale;
 ! 	else
 !     x = x / 20;
-! 	printk(KERN_INFO "KERNET ssthresh_scale: %d", sk->tcp_ssthresh_scale);
-!   printk(KERN_INFO "KERNET cwnd: %d", tp->snd_cwnd);
-! 	printk(KERN_INFO "KERNET src: %d dest: %d old: %d new: %d", inet->inet_dport, inet->inet_sport, tp->snd_ssthresh, x);
+! 	//printk(KERN_INFO "KERNET ssthresh_scale: %d", sk->tcp_ssthresh_scale);
+!   //printk(KERN_INFO "KERNET cwnd: %d", tp->snd_cwnd);
+! 	printk(KERN_INFO "KERNET src: %d dest: %d old: %d new: %d", ntohs(inet->inet_sport), ntohs(inet->inet_dport), tp->snd_ssthresh, x);
 ! 	return x;
   }
   EXPORT_SYMBOL_GPL(tcp_reno_ssthresh);
